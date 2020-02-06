@@ -19,6 +19,10 @@ let tarjetaSchema = new Schema({
     state: {
         type: Boolean,
         default: true
+    },
+    pathimg:{
+        type: String,
+        required: [true, 'EL path es necesario']
     }
 });
 

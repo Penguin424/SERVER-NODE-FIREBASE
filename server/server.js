@@ -2,18 +2,20 @@ require('./config/config.js');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 const cors = require('cors');
 const app = express();
 
 
 const routers = require('./routes/routes.js');
-const uploads = require('./controllers/terjetasimg.js');
 const corsOptions = {origin: '*'};
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
+
+app.use(express.static(path.join(__dirname, '/../public')));
+
 app.use('/api',cors(corsOptions),routers);
-app.use('/api',cors(corsOptions),uploads);
 
 app.listen(process.env.PORT, (e) => {
     if(e)
