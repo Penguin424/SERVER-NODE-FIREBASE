@@ -38,7 +38,6 @@ const controller =
                 title: body.title,
                 text: body.text,
                 img: nameArchive,
-                pathimg: pathArchive
             });
             
                 
