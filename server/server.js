@@ -5,6 +5,15 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const app = express();
+const admin = require("firebase-admin");
+
+var serviceAccount = require("../portafolio-c8c78-firebase-adminsdk-g0fun-2f8ad1be48.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://portafolio-c8c78.firebaseio.com",
+  storageBucket: 'portafolio-c8c78.appspot.com'
+});
 
 
 const routers = require('./routes/routes.js');
@@ -27,16 +36,16 @@ app.listen(process.env.PORT, (e) => {
 
 });
 
-mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, (e) => {
+// mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, (e) => {
 
-    if(e) throw e;
+//     if(e) throw e;
 
-    console.log('Base de datos conectada');
-
-
-});
+//     console.log('Base de datos conectada');
 
 
-// Parametros recomentados para por mongoose
-mongoose.set('useCreateIndex', true);
-mongoose.set('useFindAndModify', false)
+// });
+
+
+// // Parametros recomentados para por mongoose
+// mongoose.set('useCreateIndex', true);
+// mongoose.set('useFindAndModify', false)

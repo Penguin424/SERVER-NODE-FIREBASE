@@ -1,5 +1,9 @@
 const Cards = require('../models/tarjetas.js');
-const fs = require('fs');
+const path = require('path');
+const {uploadFile, getPublicUrl,dbCreateCard} = require('../conections/conections.js');
+const UUID = require("uuid-v4");
+
+
 
 const controller = 
 {
@@ -22,49 +26,38 @@ const controller =
 
 
     },
-    crearTerjeta: (req, res) => 
+    crearTerjeta: (req, res, next) => 
     {
-        let body = req.body;
-        let pathArchive = req.file.path;
-        let arrayArchive = pathArchive.split('/')
-        let nameArchive = arrayArchive[arrayArchive.length - 1];
 
-        let extensionArrayArchive = nameArchive.split('.');
-        let extension = extensionArrayArchive[extensionArrayArchive.length - 1];
+      let body = req.body;
+      let uuid = UUID();
+      const gcsname = Date.now() + req.file.originalname;
+      let url = getPublicUrl(gcsname, uuid);
 
-        if (extension === 'png'||extension === 'jpg'||extension==='gif'||extension==='jpge')
-        {
-            let card = new Cards({
-                title: body.title,
-                text: body.text,
-                img: nameArchive,
-            });
-            
-                
-            
-            card.save((err, card) => {
-                if(err)
-                {
-                    return res.status(400).json({
-                        ok: false,
-                        err
-                    });
-                }
-            
-                res.json({
-                    ok: true,
-                    card: card
-                });
-            });
-        }
-        else
-        {
-            fs.unlink(nameArchivo, (err) => 
-            {
-                res.json({ok: false});
-            })
-        }
+      let card = 
+      {
+        title: body.title,
+        text: body.text,
+        img: url
+      };
+
+      uploadFile(req,res,next,uuid,gcsname);
+      dbCreateCard(card);
+
+      res.status(200).json({
+        ok: true,
+        cardData: card
+      });
+
+      
         
+    },
+    mandarIMG: (req,res) => 
+    {
+
+      let pathImg = ``
+
+      res.sendFile(path.resolve(__dirname + '/../../public/img-1581128480739.png'));
     }
 }
 
